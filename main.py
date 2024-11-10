@@ -13,8 +13,8 @@ pg.display.set_caption("MarioLike")
 
 # Screen-related variable
 SCREEN_WIDTH, SCREEN_HEIGHT = screen.get_size()
-generation_factor = (
-    SCREEN_WIDTH // 250
+generation_factor = (SCREEN_WIDTH // 200) * (
+    SCREEN_WIDTH // 1000
 )  # This will impact the number of obstacles and clouds
 
 # Text initiation
@@ -173,9 +173,6 @@ while True:
     obs_Widths = []
     obs_Heights = []
 
-    # Flag to ensure that there's at least one obstacle at SCREEN_HEIGHT - 200
-    obstacle_at_bottom = False
-
     # Generate obstacles with the same number of elements in all lists
     obs_xPositions = []
     obs_yPositions = []
@@ -195,7 +192,6 @@ while True:
         obs_Widths.append(obs_width)
         obs_Heights.append(obs_height)
 
-
     # Ensure that all lists have the same length
     for i in range(len(obs_xPositions)):  # len() ensures that we're within bounds
         # Drawing logic here
@@ -205,8 +201,6 @@ while True:
         block_outline = drawBlockOutline(
             obs_xPositions[i], obs_yPositions[i], obs_Widths[i], obs_Heights[i]
         )
-
-
 
     for i in range(generation_factor * 2):
         cloud_x = random.randint(0, SCREEN_WIDTH)
@@ -496,8 +490,8 @@ while True:
             )
             pg.display.update()
             pg.time.delay(5000)
-            pg.quit()
-            sys.exit()
+            level = 1
+            break
 
         # Display update and game clock
         pg.display.update()
