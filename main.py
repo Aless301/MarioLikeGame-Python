@@ -170,7 +170,7 @@ while True:
     # Generating random values for:
     for i in range(generation_factor):
         obs_x = random.randint(0, SCREEN_WIDTH)
-        obs_y = random.randint(0, SCREEN_HEIGHT - 200)
+        obs_y = random.randint(100, SCREEN_HEIGHT - 200)
         obs_width = random.randint(40, 200)
         obs_height = random.randint(20, 60)
 
