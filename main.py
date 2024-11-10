@@ -35,7 +35,7 @@ end_font = pg.font.Font("freesansbold.ttf", 100)
 game_over = end_font.render("GAME OVER", True, (0, 0, 0))
 text_width = game_over.get_width()
 
-# Variables
+# Internal Point Variables
 score = 0  # If drops to 0 after level 1, you lose
 level = 1  # Will impact the number of enemies
 
@@ -50,7 +50,7 @@ is_floor = False  # Checks if the user is on a solid body
 dmg_cooldown = False  # Avoids taking multiple damages per second
 dmg_ticks = 0
 
-reload_cooldown = False  # Don't touch that
+reload_cooldown = False  # Don't touch that you silly bitch
 reload_ticks = 0
 
 item_cooldown = False
@@ -102,7 +102,7 @@ def drawEnemy(enemy_x):
     return enemy
 
 
-# Draws the clouds
+# Draws the enemy outline
 def drawEnemyOutline(enemy_x):
     enemy_outline = pg.draw.rect(
         screen, (0, 100, 0), pg.Rect(enemy_x, SCREEN_HEIGHT - 40 - 40, 40, 40), 4
@@ -116,7 +116,7 @@ def drawItem(item_x, item_y):
     return item
 
 
-# Draws a black line
+# Draws a black line when we can't see the player
 def drawIndicatorLine(x, y, width, height):
     indicator_line = pg.draw.line(
         screen,
