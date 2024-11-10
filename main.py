@@ -13,25 +13,25 @@ pg.display.set_caption("MarioLike")
 
 # Screen-related variable
 SCREEN_WIDTH, SCREEN_HEIGHT = screen.get_size()
-generation_factor = (SCREEN_WIDTH // 200) * (
-    SCREEN_WIDTH // 1000
+size_factor = SCREEN_WIDTH / (
+    SCREEN_WIDTH - 100
 )  # This will impact the number of obstacles and clouds
 
 # Text initiation
-font = pg.font.Font("freesansbold.ttf", 28)
+font = pg.font.Font("freesansbold.ttf", round(28 * size_factor))
 instructions = font.render(
     "Press [R] to reload the level, [X] to quit.", True, (0, 0, 0)
 )
 
-small_font = pg.font.Font("freesansbold.ttf", 20)
+small_font = pg.font.Font("freesansbold.ttf", round(20 * size_factor))
 item_instructions = small_font.render(
     "Press [E] mid-jump to double-jump.", True, (0, 0, 0)
 )
 item_height = item_instructions.get_height()
 
-subtitle = pg.font.Font("freesansbold.ttf", 50)
+subtitle = pg.font.Font("freesansbold.ttf", round(50 * size_factor))
 
-end_font = pg.font.Font("freesansbold.ttf", 100)
+end_font = pg.font.Font("freesansbold.ttf", round(100 * size_factor))
 game_over = end_font.render("GAME OVER", True, (0, 0, 0))
 text_width = game_over.get_width()
 
@@ -64,7 +64,9 @@ enemy_direction = 3  # Enemy displcement
 
 # Goal image
 goal_image = pg.image.load("star.png")
-resized_image = pg.transform.scale(goal_image, (30, 30))
+resized_image = pg.transform.scale(
+    goal_image, (round(30 * size_factor), round(30 * size_factor))
+)
 
 
 # Functions, a lot of them
@@ -73,7 +75,14 @@ resized_image = pg.transform.scale(goal_image, (30, 30))
 # Draws the obstacles
 def drawBlock(obs_x, obs_y, obs_width, obs_height):
     obstacle = pg.draw.rect(
-        screen, (0, 0, 255), pg.Rect(obs_x, obs_y, obs_width, obs_height)
+        screen,
+        (0, 0, 255),
+        pg.Rect(
+            obs_x,
+            obs_y,
+            round(obs_width * size_factor),
+            round(obs_height * size_factor),
+        ),
     )
     return obstacle
 
@@ -81,7 +90,15 @@ def drawBlock(obs_x, obs_y, obs_width, obs_height):
 # Draws the obstacles' outline
 def drawBlockOutline(obs_x, obs_y, obs_width, obs_height):
     block_outline = pg.draw.rect(
-        screen, (0, 0, 100), pg.Rect(obs_x, obs_y, obs_width, obs_height), 5
+        screen,
+        (0, 0, 100),
+        pg.Rect(
+            obs_x,
+            obs_y,
+            round(obs_width * size_factor),
+            round(obs_height * size_factor),
+        ),
+        5,
     )
     return block_outline
 
@@ -89,7 +106,14 @@ def drawBlockOutline(obs_x, obs_y, obs_width, obs_height):
 # Draws the clouds
 def drawClouds(cloud_x, cloud_y, cloud_width, cloud_height):
     cloud = pg.draw.rect(
-        screen, (255, 255, 255), pg.Rect(cloud_x, cloud_y, cloud_width, cloud_height)
+        screen,
+        (255, 255, 255),
+        pg.Rect(
+            cloud_x,
+            cloud_y,
+            round(cloud_width * size_factor),
+            round(cloud_height * size_factor),
+        ),
     )
     return cloud
 
@@ -97,7 +121,14 @@ def drawClouds(cloud_x, cloud_y, cloud_width, cloud_height):
 # Draws the enemies
 def drawEnemy(enemy_x):
     enemy = pg.draw.rect(
-        screen, (0, 255, 0), pg.Rect(enemy_x, SCREEN_HEIGHT - 40 - 40, 40, 40)
+        screen,
+        (0, 255, 0),
+        pg.Rect(
+            enemy_x,
+            round(SCREEN_HEIGHT - 40 * size_factor - 40 * size_factor),
+            round(40 * size_factor),
+            round(40 * size_factor),
+        ),
     )
     return enemy
 
@@ -105,14 +136,27 @@ def drawEnemy(enemy_x):
 # Draws the enemy outline
 def drawEnemyOutline(enemy_x):
     enemy_outline = pg.draw.rect(
-        screen, (0, 100, 0), pg.Rect(enemy_x, SCREEN_HEIGHT - 40 - 40, 40, 40), 4
+        screen,
+        (0, 100, 0),
+        pg.Rect(
+            enemy_x,
+            SCREEN_HEIGHT - round(40 * size_factor) - round(40 * size_factor),
+            round(40 * size_factor),
+            round(40 * size_factor),
+        ),
+        4,
     )
     return enemy_outline
 
 
 # Draws the items
 def drawItem(item_x, item_y):
-    item = pg.draw.rect(screen, (0, 155, 0), pg.Rect(item_x, item_y, 30, 30), 4)
+    item = pg.draw.rect(
+        screen,
+        (0, 155, 0),
+        pg.Rect(item_x, item_y, round(30 * size_factor), round(30 * size_factor)),
+        4,
+    )
     return item
 
 
@@ -132,7 +176,12 @@ def drawIndicatorLine(x, y, width, height):
 while True:
 
     # Player's coordinates
-    x, y, width, height = 0, SCREEN_HEIGHT - 40, 40, 40
+    x, y, width, height = (
+        0,
+        SCREEN_HEIGHT - round(40 * size_factor),
+        round(40 * size_factor),
+        round(40 * size_factor),
+    )
 
     # Item counters
     item_on_screen = 1
@@ -180,11 +229,11 @@ while True:
     obs_Heights = []
 
     # Ensure obstacle generation fills all the lists consistently
-    for i in range(generation_factor):  # Adjust generation_factor as necessary
+    for i in range(round(5 * size_factor)):  # Adjust size_factor as necessary
         obs_x = random.randint(0, SCREEN_WIDTH)
         obs_y = random.randint(100, SCREEN_HEIGHT - 200)  # Random y position
-        obs_width = random.randint(40, 200)  # Random width
-        obs_height = random.randint(20, 60)  # Random height
+        obs_width = round(random.randint(40, 200) * size_factor)  # Random width
+        obs_height = round(random.randint(20, 60) * size_factor)  # Random height
 
         # Append each list consistently
         obs_xPositions.append(obs_x)
@@ -202,11 +251,11 @@ while True:
             obs_xPositions[i], obs_yPositions[i], obs_Widths[i], obs_Heights[i]
         )
 
-    for i in range(generation_factor * 2):
+    for i in range(round(10 * size_factor)):
         cloud_x = random.randint(0, SCREEN_WIDTH)
         cloud_y = random.randint(0, SCREEN_HEIGHT - 200)
-        cloud_width = random.randint(20, 60)
-        cloud_height = random.randint(10, 30)
+        cloud_width = round(random.randint(20, 60) * size_factor)
+        cloud_height = round(random.randint(10, 30) * size_factor)
 
         cloud_xPositions.append(cloud_x)
         cloud_yPositions.append(cloud_y)
@@ -236,7 +285,14 @@ while True:
         # Creating the map
         screen.fill((135, 206, 235))
         floor = pg.draw.rect(
-            screen, (100, 200, 0), pg.Rect(0, SCREEN_HEIGHT - 40, SCREEN_WIDTH, 40)
+            screen,
+            (100, 200, 0),
+            pg.Rect(
+                0,
+                SCREEN_HEIGHT - round(40 * size_factor),
+                SCREEN_WIDTH,
+                round(40 * size_factor),
+            ),
         )
 
         # Drawing all the stuff
@@ -252,10 +308,10 @@ while True:
         goal = pg.draw.rect(
             screen,
             (135, 206, 235),
-            pg.Rect(goal_x, goal_y, 30, 30),
+            pg.Rect(goal_x, goal_y, round(30 * size_factor), round(30 * size_factor)),
         )
 
-        for i in range(generation_factor * 2):
+        for i in range(round(10 * size_factor)):
             cloud = drawClouds(
                 cloud_xPositions[i],
                 cloud_yPositions[i],
@@ -263,7 +319,7 @@ while True:
                 cloud_Heights[i],
             )
 
-        for i in range(generation_factor):
+        for i in range(round(5 * size_factor)):
             obstacle = drawBlock(
                 obs_xPositions[i], obs_yPositions[i], obs_Widths[i], obs_Heights[i]
             )
@@ -292,8 +348,12 @@ while True:
         score_counter = font.render("Score : " + str(score), True, (0, 0, 0))
         score_width = score_counter.get_width()
 
+        level_counter = font.render("Level : " + str(level), True, (0, 0, 0))
+        level_counter_width = level_counter.get_width()
+
         screen.blit(instructions, (10, 10))
         screen.blit(score_counter, (SCREEN_WIDTH - score_width - 10, 10))
+        screen.blit(level_counter, (SCREEN_WIDTH - level_counter_width - 10, 50))
 
         if item_count > 0:
             screen.blit(item_instructions, (10, SCREEN_HEIGHT - item_height - 10))
@@ -429,29 +489,33 @@ while True:
         if not dmg_cooldown:
             for i in range(len(enemy_xPositions)):
                 enemy_x = enemy_xPositions[i]
-                if enemy_x < x < enemy_x + 40 and y > SCREEN_HEIGHT - 120:
+                if enemy_x < x < enemy_x + round(
+                    40 * size_factor
+                ) and y > SCREEN_HEIGHT - round(120 * size_factor):
                     x = 0
                     y = SCREEN_HEIGHT - height - 40
                     dmg_cooldown = True
                     if score > 0:
                         score -= 10
-                if enemy_x < x + width < enemy_x + 40 and y > SCREEN_HEIGHT - 120:
+                if enemy_x < x + width < enemy_x + round(
+                    40 * size_factor
+                ) and y > SCREEN_HEIGHT - round(120 * size_factor):
                     x = 0
-                    y = SCREEN_HEIGHT - height - 40
+                    y = SCREEN_HEIGHT - height - round(40 * size_factor)
                     dmg_cooldown = True
                     if score > 0:
                         score -= 10
 
         # Gravity
-        if y < SCREEN_HEIGHT - height - 40:
+        if y < SCREEN_HEIGHT - height - round(40 * size_factor):
             if not is_floor:
                 y += downspeed
                 downspeed += gravity
                 is_jumping = True
 
         # Cancels gravity if on a solid body
-        if y >= SCREEN_HEIGHT - height - 40:
-            y = SCREEN_HEIGHT - height - 40
+        if y >= SCREEN_HEIGHT - height - round(40 * size_factor):
+            y = SCREEN_HEIGHT - height - round(40 * size_factor)
             is_jumping = False
             downspeed = 0
             v = 6
@@ -466,7 +530,7 @@ while True:
             enemy_direction = enemy_directions[i]
             if enemy_x < 0:
                 enemy_direction = -3
-            if enemy_x + 40 > SCREEN_WIDTH:
+            if enemy_x + round(40 * size_factor) > SCREEN_WIDTH:
                 enemy_direction = 3
 
             enemy_x -= enemy_direction
