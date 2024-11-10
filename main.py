@@ -167,17 +167,46 @@ while True:
     reload_cooldown = True
     item_cooldown = True
 
-    # Generating random values for:
-    for i in range(generation_factor):
-        obs_x = random.randint(0, SCREEN_WIDTH)
-        obs_y = random.randint(100, SCREEN_HEIGHT - 200)
-        obs_width = random.randint(40, 200)
-        obs_height = random.randint(20, 60)
+    # Generate obstacles and make sure lists are populated
+    obs_xPositions = []
+    obs_yPositions = []
+    obs_Widths = []
+    obs_Heights = []
 
+    # Flag to ensure that there's at least one obstacle at SCREEN_HEIGHT - 200
+    obstacle_at_bottom = False
+
+    # Generate obstacles with the same number of elements in all lists
+    obs_xPositions = []
+    obs_yPositions = []
+    obs_Widths = []
+    obs_Heights = []
+
+    # Ensure obstacle generation fills all the lists consistently
+    for i in range(generation_factor):  # Adjust generation_factor as necessary
+        obs_x = random.randint(0, SCREEN_WIDTH)
+        obs_y = random.randint(100, SCREEN_HEIGHT - 200)  # Random y position
+        obs_width = random.randint(40, 200)  # Random width
+        obs_height = random.randint(20, 60)  # Random height
+
+        # Append each list consistently
         obs_xPositions.append(obs_x)
         obs_yPositions.append(obs_y)
         obs_Widths.append(obs_width)
-        obs_Heights.append(obs_height)  # The obstacles
+        obs_Heights.append(obs_height)
+
+
+    # Ensure that all lists have the same length
+    for i in range(len(obs_xPositions)):  # len() ensures that we're within bounds
+        # Drawing logic here
+        obstacle = drawBlock(
+            obs_xPositions[i], obs_yPositions[i], obs_Widths[i], obs_Heights[i]
+        )
+        block_outline = drawBlockOutline(
+            obs_xPositions[i], obs_yPositions[i], obs_Widths[i], obs_Heights[i]
+        )
+
+
 
     for i in range(generation_factor * 2):
         cloud_x = random.randint(0, SCREEN_WIDTH)
