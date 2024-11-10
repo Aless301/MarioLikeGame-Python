@@ -140,6 +140,7 @@ while True:
 
     # Reset clocks
     dmg_ticks = 0
+    reload_ticks = 0
     item_ticks = 0
 
     # Arrays for positions of:
