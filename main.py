@@ -13,29 +13,34 @@ pg.display.set_caption("MarioLike")
 
 # Screen-related variable
 SCREEN_WIDTH, SCREEN_HEIGHT = screen.get_size()
-size_factor = SCREEN_WIDTH / (
-    SCREEN_WIDTH - 100
-)  # This will impact the number of obstacles and clouds
+
+
+# Scaling function
+def scale(object):
+    size_factor = SCREEN_WIDTH / (SCREEN_WIDTH - 100)
+    object_scaled = round(size_factor * object)
+    return object_scaled
+
 
 # Text initiation
-font = pg.font.Font("freesansbold.ttf", round(28 * size_factor))
+font = pg.font.Font("freesansbold.ttf", scale(28))
 instructions = font.render(
     "Press [R] to reload the level, [X] to quit.", True, (0, 0, 0)
 )
 
-small_font = pg.font.Font("freesansbold.ttf", round(20 * size_factor))
+small_font = pg.font.Font("freesansbold.ttf", scale(20))
 item_instructions = small_font.render(
     "Press [E] mid-jump to double-jump.", True, (0, 0, 0)
 )
 item_height = item_instructions.get_height()
 
-subtitle = pg.font.Font("freesansbold.ttf", round(50 * size_factor))
+subtitle = pg.font.Font("freesansbold.ttf", scale(50))
 
-end_font = pg.font.Font("freesansbold.ttf", round(100 * size_factor))
+end_font = pg.font.Font("freesansbold.ttf", scale(100))
 game_over = end_font.render("GAME OVER", True, (0, 0, 0))
 text_width = game_over.get_width()
 
-# Internal Point Variables
+# Internal Point Variables (hope you got the reference 😉)
 score = 0  # If drops to 0 after level 1, you lose
 level = 1  # Will impact the number of enemies
 
@@ -53,7 +58,7 @@ dmg_ticks = 0
 reload_cooldown = False  # Don't touch that you silly bitch
 reload_ticks = 0
 
-item_cooldown = False
+item_cooldown = False  # Please don't touch that either
 item_ticks = 0
 
 item_active = False  # Checks if an item is active
@@ -64,9 +69,7 @@ enemy_direction = 3  # Enemy displcement
 
 # Goal image
 goal_image = pg.image.load("star.png")
-resized_image = pg.transform.scale(
-    goal_image, (round(30 * size_factor), round(30 * size_factor))
-)
+resized_image = pg.transform.scale(goal_image, (scale(30), scale(30)))
 
 
 # Functions, a lot of them
@@ -80,8 +83,8 @@ def drawBlock(obs_x, obs_y, obs_width, obs_height):
         pg.Rect(
             obs_x,
             obs_y,
-            round(obs_width * size_factor),
-            round(obs_height * size_factor),
+            scale(obs_width),
+            scale(obs_height),
         ),
     )
     return obstacle
@@ -95,8 +98,8 @@ def drawBlockOutline(obs_x, obs_y, obs_width, obs_height):
         pg.Rect(
             obs_x,
             obs_y,
-            round(obs_width * size_factor),
-            round(obs_height * size_factor),
+            scale(obs_width),
+            scale(obs_height),
         ),
         5,
     )
@@ -111,8 +114,8 @@ def drawClouds(cloud_x, cloud_y, cloud_width, cloud_height):
         pg.Rect(
             cloud_x,
             cloud_y,
-            round(cloud_width * size_factor),
-            round(cloud_height * size_factor),
+            scale(cloud_width),
+            scale(cloud_height),
         ),
     )
     return cloud
@@ -125,9 +128,9 @@ def drawEnemy(enemy_x):
         (0, 255, 0),
         pg.Rect(
             enemy_x,
-            round(SCREEN_HEIGHT - 40 * size_factor - 40 * size_factor),
-            round(40 * size_factor),
-            round(40 * size_factor),
+            round(SCREEN_HEIGHT - scale(40) - scale(40)),
+            scale(40),
+            scale(40),
         ),
     )
     return enemy
@@ -140,9 +143,9 @@ def drawEnemyOutline(enemy_x):
         (0, 100, 0),
         pg.Rect(
             enemy_x,
-            SCREEN_HEIGHT - round(40 * size_factor) - round(40 * size_factor),
-            round(40 * size_factor),
-            round(40 * size_factor),
+            SCREEN_HEIGHT - scale(40) - scale(40),
+            scale(40),
+            scale(40),
         ),
         4,
     )
@@ -154,7 +157,7 @@ def drawItem(item_x, item_y):
     item = pg.draw.rect(
         screen,
         (0, 155, 0),
-        pg.Rect(item_x, item_y, round(30 * size_factor), round(30 * size_factor)),
+        pg.Rect(item_x, item_y, scale(30), scale(30)),
         4,
     )
     return item
@@ -178,9 +181,9 @@ while True:
     # Player's coordinates
     x, y, width, height = (
         0,
-        SCREEN_HEIGHT - round(40 * size_factor),
-        round(40 * size_factor),
-        round(40 * size_factor),
+        SCREEN_HEIGHT - scale(40),
+        scale(40),
+        scale(40),
     )
 
     # Item counters
@@ -229,11 +232,11 @@ while True:
     obs_Heights = []
 
     # Ensure obstacle generation fills all the lists consistently
-    for i in range(round(5 * size_factor)):  # Adjust size_factor as necessary
+    for i in range(scale(5)):  # Adjust size_factor as necessary
         obs_x = random.randint(0, SCREEN_WIDTH)
         obs_y = random.randint(100, SCREEN_HEIGHT - 200)  # Random y position
-        obs_width = round(random.randint(40, 200) * size_factor)  # Random width
-        obs_height = round(random.randint(20, 60) * size_factor)  # Random height
+        obs_width = round(scale(random.randint(40, 200)))  # Random width
+        obs_height = round(scale(random.randint(20, 60)))  # Random height
 
         # Append each list consistently
         obs_xPositions.append(obs_x)
@@ -251,11 +254,11 @@ while True:
             obs_xPositions[i], obs_yPositions[i], obs_Widths[i], obs_Heights[i]
         )
 
-    for i in range(round(10 * size_factor)):
+    for i in range(scale(10)):
         cloud_x = random.randint(0, SCREEN_WIDTH)
         cloud_y = random.randint(0, SCREEN_HEIGHT - 200)
-        cloud_width = round(random.randint(20, 60) * size_factor)
-        cloud_height = round(random.randint(10, 30) * size_factor)
+        cloud_width = round(scale(random.randint(20, 60)))
+        cloud_height = round(scale(random.randint(10, 30)))
 
         cloud_xPositions.append(cloud_x)
         cloud_yPositions.append(cloud_y)
@@ -289,9 +292,9 @@ while True:
             (100, 200, 0),
             pg.Rect(
                 0,
-                SCREEN_HEIGHT - round(40 * size_factor),
+                SCREEN_HEIGHT - scale(40),
                 SCREEN_WIDTH,
-                round(40 * size_factor),
+                scale(40),
             ),
         )
 
@@ -308,10 +311,10 @@ while True:
         goal = pg.draw.rect(
             screen,
             (135, 206, 235),
-            pg.Rect(goal_x, goal_y, round(30 * size_factor), round(30 * size_factor)),
+            pg.Rect(goal_x, goal_y, scale(30), scale(30)),
         )
 
-        for i in range(round(10 * size_factor)):
+        for i in range(scale(10)):
             cloud = drawClouds(
                 cloud_xPositions[i],
                 cloud_yPositions[i],
@@ -319,7 +322,7 @@ while True:
                 cloud_Heights[i],
             )
 
-        for i in range(round(5 * size_factor)):
+        for i in range(scale(5)):
             obstacle = drawBlock(
                 obs_xPositions[i], obs_yPositions[i], obs_Widths[i], obs_Heights[i]
             )
@@ -489,33 +492,31 @@ while True:
         if not dmg_cooldown:
             for i in range(len(enemy_xPositions)):
                 enemy_x = enemy_xPositions[i]
-                if enemy_x < x < enemy_x + round(
-                    40 * size_factor
-                ) and y > SCREEN_HEIGHT - round(120 * size_factor):
+                if enemy_x < x < enemy_x + scale(40) and y > SCREEN_HEIGHT - scale(120):
                     x = 0
                     y = SCREEN_HEIGHT - height - 40
                     dmg_cooldown = True
                     if score > 0:
                         score -= 10
-                if enemy_x < x + width < enemy_x + round(
-                    40 * size_factor
-                ) and y > SCREEN_HEIGHT - round(120 * size_factor):
+                if enemy_x < x + width < enemy_x + scale(
+                    40
+                ) and y > SCREEN_HEIGHT - scale(120):
                     x = 0
-                    y = SCREEN_HEIGHT - height - round(40 * size_factor)
+                    y = SCREEN_HEIGHT - height - scale(40)
                     dmg_cooldown = True
                     if score > 0:
                         score -= 10
 
         # Gravity
-        if y < SCREEN_HEIGHT - height - round(40 * size_factor):
+        if y < SCREEN_HEIGHT - height - scale(40):
             if not is_floor:
                 y += downspeed
                 downspeed += gravity
                 is_jumping = True
 
         # Cancels gravity if on a solid body
-        if y >= SCREEN_HEIGHT - height - round(40 * size_factor):
-            y = SCREEN_HEIGHT - height - round(40 * size_factor)
+        if y >= SCREEN_HEIGHT - height - scale(40):
+            y = SCREEN_HEIGHT - height - scale(40)
             is_jumping = False
             downspeed = 0
             v = 6
@@ -530,7 +531,7 @@ while True:
             enemy_direction = enemy_directions[i]
             if enemy_x < 0:
                 enemy_direction = -3
-            if enemy_x + round(40 * size_factor) > SCREEN_WIDTH:
+            if enemy_x + scale(40) > SCREEN_WIDTH:
                 enemy_direction = 3
 
             enemy_x -= enemy_direction
